@@ -40,7 +40,10 @@ pipeline {
                     credentialsId: env.ENV_FILE_CREDENTIALS,
                     variable: 'ENV_FILE'
                 )]) {
-                    sh 'cp "$ENV_FILE" .env'
+                    sh '''
+                        rm -f .env
+                        cp "$ENV_FILE" .env
+                    '''
                 }
 
                 script {
