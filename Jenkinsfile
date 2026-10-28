@@ -23,6 +23,9 @@ pipeline {
 
     triggers {
         githubPush()
+        // Jenkins is local to this Mac; polling is the automatic-trigger fallback
+        // when GitHub cannot reach a public webhook URL.
+        pollSCM('H/5 * * * *')
     }
 
     options {

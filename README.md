@@ -108,7 +108,7 @@ docker run --rm -p 8080:8080 calculator-api:local
 
 4. Configure SMTP under **Manage Jenkins → System → E-mail Notification**.
 5. Ensure the Jenkins agent has Docker, Docker Compose, Maven, `curl`, and permission to access Docker. On Linux this commonly requires `sudo usermod -aG docker jenkins`, followed by a Jenkins restart.
-6. Add a GitHub repository webhook to `http://YOUR_JENKINS_HOST/github-webhook/`.
+6. Add a GitHub repository webhook to `http://YOUR_JENKINS_HOST/github-webhook/` when Jenkins has a public URL. When Jenkins is only local, this project uses Poll SCM every five minutes as the allowed automatic-trigger fallback.
 
 The pipeline restores `.env` from the Jenkins Secret File credential, builds and tests the project, publishes JUnit results, pushes both a build-number tag and `latest` to Docker Hub, deploys with Compose, runs a health/smoke check, and emails the result. Concurrent builds are disabled so deployments cannot conflict.
 
