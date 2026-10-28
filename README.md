@@ -1,10 +1,10 @@
 # Calculator REST API — CI/CD Mini Project
 
-A Spring Boot calculator API packaged with Maven and deployed as an app-plus-Nginx Docker Compose stack. A GitHub push can trigger Jenkins to build, test, publish, and deploy the image automatically.
+A Spring Boot calculator API packaged with Maven and deployed as an app-plus-Nginx Docker Compose stack. A GitHub push can trigger Jenkins to build, test, publish, and deploy the image automatically!
 
 ## Architecture
 
-```text
+```
 Developer → GitHub → webhook → Jenkins → Docker Hub
                                   │
                                   └── Docker Compose
@@ -98,23 +98,17 @@ docker run --rm -p 8080:8080 calculator-api:local
 ## Jenkins setup
 
 1. Install Pipeline, Git, GitHub, JUnit, Mailer, and Timestamper Jenkins plugins.
-2. Create a Pipeline job using **Pipeline script from SCM**, pointing to this repository. Enable **GitHub hook trigger for GITScm polling**.
-3. Under **Manage Jenkins → Credentials**, add:
-
-   | Credential ID | Type | Contents |
-   | --- | --- | --- |
-   | `dockerhub-credentials` | Username with password | Docker Hub username and access token/password |
-   | `calculator-env` | Secret file | Your completed `.env` file |
-
-4. Configure SMTP under **Manage Jenkins → System → E-mail Notification**.
-5. Ensure the Jenkins agent has Docker, Docker Compose, Maven, `curl`, and permission to access Docker. On Linux this commonly requires `sudo usermod -aG docker jenkins`, followed by a Jenkins restart.
-6. Add a GitHub repository webhook to `http://YOUR_JENKINS_HOST/github-webhook/` when Jenkins has a public URL. When Jenkins is only local, this project uses Poll SCM every five minutes as the allowed automatic-trigger fallback.
+2. Create a Pipeline job using Pipeline script from SCM, pointing to this repository. Enable GitHub hook trigger for GITScm polling.
+3. Under Manage Jenkins → Credentials, add:Credential IDTypeContentsdockerhub-credentialsUsername with passwordDocker Hub username and access token/passwordcalculator-envSecret fileYour completed .env file
+4. Configure SMTP under Manage Jenkins → System → E-mail Notification.
+5. Ensure the Jenkins agent has Docker, Docker Compose, Maven, curl, and permission to access Docker. On Linux this commonly requires sudo usermod -aG docker jenkins, followed by a Jenkins restart.
+6. Add a GitHub repository webhook to http://YOUR_JENKINS_HOST/github-webhook/ when Jenkins has a public URL. When Jenkins is only local, this project uses Poll SCM every five minutes as the allowed automatic-trigger fallback.
 
 The pipeline restores `.env` from the Jenkins Secret File credential, builds and tests the project, publishes JUnit results, pushes both a build-number tag and `latest` to Docker Hub, deploys with Compose, runs a health/smoke check, and emails the result. Concurrent builds are disabled so deployments cannot conflict.
 
 ## Project structure
 
-```text
+```
 src/main/java/...       Spring Boot application
 src/test/java/...       JUnit and MockMvc tests
 nginx/default.conf      Nginx reverse-proxy configuration
